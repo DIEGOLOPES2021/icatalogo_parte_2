@@ -2,11 +2,27 @@
 require("../../database/conexaoBD.php");
 session_start();
 
-$acao = isset($_POST["acao"])?$_POST["acao"]:"erro";
+$acao = isset($_REQUEST["acao"])?$_REQUEST["acao"]:"erro";
 
+function validarCampos(){
+    $erros=[];
+if(isset($_POST["usuario"]) || $_POST["usuario"] == ""){
+    $erros[] = "o campo usuario é obrigatorio ";
+}
+if(isset($_POST["senha"]) || $_POST["senha"] == ""){
+    $erros[] = "o campo senha é obrigatorio ";
+}
+return $erros;
+}
 switch ($acao) {
     case "login":
         
+        $erros= validarCampos();
+
+        if(count($erros) >0){
+            $_SESSION["erros"] = $erros;
+
+        }
 //implementar hoje
 
         //receber os campos usuário e senha do post
@@ -25,28 +41,42 @@ switch ($acao) {
          $usuarios = $dados["usuario"];
          $senhas = $dados["senha"];
 
-         echo "$usuarios <br>";
-         echo "$senhas <br>";
-
          //resultado se o usuário existe
-         if ($usuarios == $usuario && $senhas == $senha){
+        // if ($usuarios == $usuario && $senhas == $senha){
  
-            $_SESSION["dado"] = $dados["usuario"];
-             echo "usuario e senha corretos <br>";
+          //  $_SESSION["usuarioId"] = $dados["id"];
+          //  $_SESSION["usuarioNome"] = $dados["nome"];
+
+          //  $mensagem = "usuario e senha corretos <br>";
+             
+       //  }else{
+          //   $erros[] = "usuario ou senha invalido";
+         //} 
+         if (!$usuario || password_verify($senha, $usuario["senha"])){
+ 
+           
+
+            $erros[] = "usuario ou senha invalido";
              
          }else{
-             echo   "usuario ou senha invalido";
-         }        
+             $_SESSION["usuarioId"] = $dados["id"];
+             $_SESSION["usuarioNome"] = $dados["nome"];
+         }               
          //verificar se a senha está correta
         
          //se estiver correta, salvar o id e o nome do usuário na sessão $_SESSION
          //se a senha estiver errada, criar uma mensagem de "usuário e/ou senha inválidos"
          //redirecionar para a tela de listagem de produtos
-         //header("location: ../../produtos/index.php ");
+         header("location: ../../produtos/index.php ");
     
         break;
-    case "logou":
+    case "logout":
         //implementar futuramente
+        //destruir a secao
+        session_destroy();
+        //redirecionar para index de produtos 
+        header("location: ../../produtos/index.php ");
+
         break;
 }
  
