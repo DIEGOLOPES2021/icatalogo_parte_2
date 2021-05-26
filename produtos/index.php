@@ -1,4 +1,6 @@
-<?php session_start(); ?>
+<?php session_start(); 
+
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 
@@ -23,11 +25,11 @@
     <div class="content">
         <section class="produtos-container">
         <?php 
-               if(isset($_SESSION["usuarioId"]) && isset($_SESSION["usuarioNome"])  ){
+               if(isset($_SESSION["usuarioId"])   ){
         ?>
             <header>
-                <button onclick="javascript:window.location.href ='./novo/'">Novo Produto</button>
-                <button>Adicionar Categoria</button>
+                <button onclick="javascript:window.location.href ='./novo'">Novo Produto</button>
+                <button  onclick="javascript:window.location.href ='../categorias'">Nova Categoria </button>
             </header>
         <?php
             }

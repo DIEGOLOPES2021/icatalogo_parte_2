@@ -47,6 +47,11 @@ switch ($_POST["acao"]) {
     case "inserir":
 
         $erros = validacaoCampos();
+
+        var_dump($_FILES["foto"]);
+
+        exit();
+
         if(count($erros) > 0){
             $_SESSION["erros"] = $erros;
 
@@ -70,5 +75,6 @@ switch ($_POST["acao"]) {
             
             header("location: index.php?mensagem=padrão");
         }
+        $_SESSION["location: index.php"];
         break;
 }

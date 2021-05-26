@@ -1,5 +1,22 @@
 <?php
-  session_start();
+ 
+
+///verifica se o ususario esta logado 
+  if(!isset($_SESSION["usuarioId"])){
+
+
+    $_SESSION["mensagem"] = "Acesso negado!!"; 
+
+    //header("location: ../index.php");
+
+  }
+
+  require("../../database/conexaoBD.php");
+
+  $sql = "SELECT * FROM tbl_categoria";
+
+  $resultado = mysqli_query($conexao, $sql);
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -21,7 +38,7 @@
   <div class="content">
     <section class="produtos-container">
       <main>
-        <form class="form-produto" method="POST" action="acoes.php">
+        <form class="form-produto" method="POST" action="acoes.php" enctype="multipart/form-data">
           <h1>Cadastro de produto</h1>
           <ul>
           <?php
@@ -67,8 +84,29 @@
             <label for="desconto">Desconto</label>
             <input type="number" min="0" id="desconto" name="desconto">
           </div>
+
+          <div class="input-group">
+            <label for="categoria">Categorias</label>
+            <select type="number" min="0" id="categoria" name="categoria"> 
+            
+            <option value="">SELECCIONE</option>
+
+            <?php 
+            while ($categoria = mysqli_fetch_array($resultado)){
+            ?>
+                 <option value="<?= $categoria["id"] ?>"><?= $categoria["descricao"] ?></option>
+            <?php 
+            }
+            ?>
+           
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="foto">Foto</label>
+            <input type="file"  id="foto" name="foto">
+          </div>
+          <input type="hidden" name="acao" value="inserir" accept="image/*"/>
           <button onclick="javascript:window.location.href = '../'">Cancelar</button>
-          <input type="hidden" name="acao" value="inserir"/>
           <button>Salvar</button>
         </form>
       </main>

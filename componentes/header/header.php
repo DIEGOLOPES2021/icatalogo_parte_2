@@ -1,9 +1,28 @@
     <link rel="stylesheet" href="../componentes/header/header.css" />
 
+        <?php 
+        if(!isset($_SESSION)) session_start();
+            if(isset($_SESSION["mensagem"])){
+        ?>
+                <div class="mensagem">
+                    <?= $_SESSION["mensagem"]; ?>
+                </div>
+
+                <script lang="javascript">
+                    setInterval(() => {
+                        document.querySelector(".mansagem").style.display = "none";
+                    }, 3000);                 
+                </script>
+        <?php
+            unset($_SESSION["mensagem"]);
+            }
+        ?>
+        
+        
     <header class="header">
 
         <figure>
-            <img src="https://i.pinimg.com/originals/5b/0d/bf/5b0dbfd5fe35a284ca9dbc2bf78abe65.jpg" />
+            <img src="../imgs/travis.png" />
         </figure>
 
         <input type="search" placeholder="Pesquisar" />

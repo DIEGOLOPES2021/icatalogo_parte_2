@@ -52,15 +52,16 @@ switch ($acao) {
        //  }else{
           //   $erros[] = "usuario ou senha invalido";
          //} 
-         if (!$usuario || password_verify($senha, $usuario["senha"])){
+         if (!$dados || !password_verify($senha, $dados["senha"])){
  
            
 
-            $erros[] = "usuario ou senha invalido";
+            $mensagem = "usuario ou senha invalido";
              
          }else{
              $_SESSION["usuarioId"] = $dados["id"];
              $_SESSION["usuarioNome"] = $dados["nome"];
+             
          }               
          //verificar se a senha está correta
         
