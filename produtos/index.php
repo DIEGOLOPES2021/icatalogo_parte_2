@@ -1,5 +1,26 @@
 <?php session_start(); 
 
+
+require("../database/conexaoBD.php");
+
+if(isset($_GET["pesquisa"])&&$_GET["pesquisa"] != ""){
+
+    $sql ="SELECT p.*, c.descricao as categoria FROM tbl_produto p
+    INNER JOIN tbl_categoria c ON p.categoria_id = c.id
+    WHERE p.descricao LIKE '%?%'
+    OR c.descricao LIKE '%?%'
+    ORDER BY p.id DESC";
+?>
+            
+<?php }else{
+
+    $sql = "SELECT p.*, c.descricao as categoria FROM tbl_produto p
+    INNER JOIN tbl_categoria c ON p.categoria_id = c.id
+    ORDER BY p.id DESC";
+}
+
+$resultado = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -35,144 +56,54 @@
             }
         ?>
             <main>
+
+
+                 <?php 
+                 while ($listaDacategoria= mysqli_fetch_array($resultado)){
+
+                    if($listaDacategoria["desconto"] > 0){
+                        //tranformou a porcentagem em decimal
+                        $desconto = $listaDacategoria["desconto"] / 100;
+                        //calculou o valor com desconto e aplicou no valor do produto
+                        $valor = $listaDacategoria["valor"] - $desconto * $listaDacategoria["valor"];
+                      }else{
+                        //se não tiver desconto, o valor recebe o preço cheio
+                        $valor = $listaDacategoria["valor"];
+                      }
+                     $qntDadedeParcelas = $listaDacategoria["valor"] > 1000 ? 12: 6;
+                     $valorParcela = $listaDacategoria["valor"] / $qntDadedeParcelas;
+                     //formatamos o valor da parcela
+                     $valorParcela = number_format($valorParcela, 2,",",".");
+                 ?>
+           
                 <article class="card-produto">
                     <figure>
-                        <img src="../imgs/air.jpg" />
+                        <img src="../produtos/fotos/<?= $listaDacategoria["imagem"] ?>" />
                     </figure>
                     <section>
-                        <span class="preco">R$ 1000,00</span>
-                        <span class="parcelamento">ou em <em>10x R$100,00 sem juros</em></span>
+                        <span class="preco">R$ <?= number_format($valor, 2,",",".") ?>
 
-                        <span class="descricao">Produto xyz cor preta novo perfeito estado 100%</span>
+                        <?php if($listaDacategoria["desconto"] > 0){ ?>
+                        <em>
+                            <?= $listaDacategoria["desconto"]?> %off
+                        </em>
+                        <?php } ?>
+                        </span>
+
+                        <span class="parcelamento">ou em <em> <?= $qntDadedeParcelas?> R$<?= $valorParcela ?> sem juros</em></span>
+
+                        <span class="descricao"><?= $listaDacategoria["descricao"] ?></span>
                         <span class="categoria">
-                            <em>Calçados</em> <em>Vestuário</em><em>Calçados</em>
+                            <em><?= $listaDacategoria["descricao"] ?></em> 
                         </span>
                     </section>
                     <footer>
 
                     </footer>
-                </article>
-                <article class="card-produto">
-                    <figure>
-                        <img src="../imgs/jordan.jpg" />
-                    </figure>
-                    <section>
-                        <span class="preco">R$ 1000,00</span>
-                        <span class="parcelamento">ou em <em>10x R$100,00 sem juros</em></span>
+                </article>  
 
-                        <span class="descricao">Produto xyz cor preta novo perfeito estado 100%</span>
-                        <span class="categoria">
-                            <em>Calçados</em> <em>Vestuário</em><em>Calçados</em>
-                        </span>
-                    </section>
-                    <footer>
-
-                    </footer>
-                </article>
-                <article class="card-produto">
-                    <figure>
-                        <img src="https://importsbaby.com/product_images/e/466/Super-Mario-Nike-Dunk-Shoes-White-Red-Blue__05753_zoom.jpg" />
-                    </figure>
-                    <section>
-                        <span class="preco">R$ 1000,00</span>
-                        <span class="parcelamento">ou em <em>10x R$100,00 sem juros</em></span>
-
-                        <span class="descricao">Produto xyz cor preta novo perfeito estado 100%</span>
-                        <span class="categoria">
-                            <em>Calçados</em> <em>Vestuário</em><em>Calçados</em>
-                        </span>
-                    </section>
-                    <footer>
-
-                    </footer>
-                </article>
-                <article class="card-produto">
-                    <figure>
-                        <img src="https://sneakerbardetroit.com/wp-content/uploads/2019/11/Air-Jordan-4-What-The-CI1184-146-2019-Release-Date-Price-4.jpg" />
-                    </figure>
-                    <section>
-                        <span class="preco">R$ 1000,00</span>
-                        <span class="parcelamento">ou em <em>10x R$100,00 sem juros</em></span>
-
-                        <span class="descricao">Produto xyz cor preta novo perfeito estado 100%</span>
-                        <span class="categoria">
-                            <em>Calçados</em> <em>Vestuário</em><em>Calçados</em>
-                        </span>
-                    </section>
-                    <footer>
-
-                    </footer>
-                </article>
-                <article class="card-produto">
-                    <figure>
-                        <img src="../imgs/jordan2.jpg" />
-                    </figure>
-                    <section>
-                        <span class="preco">R$ 1000,00</span>
-                        <span class="parcelamento">ou em <em>10x R$100,00 sem juros</em></span>
-
-                        <span class="descricao">Produto xyz cor preta novo perfeito estado 100%</span>
-                        <span class="categoria">
-                            <em>Calçados</em> <em>Vestuário</em><em>Calçados</em>
-                        </span>
-                    </section>
-                    <footer>
-
-                    </footer>
-                </article>
-                <article class="card-produto">
-                    <figure>
-                        <img src="https://static.wixstatic.com/media/f7a3b9_1f9d7540176a4c83a62736921faeaf39~mv2.jpg/v1/fill/w_1135,h_722,al_c,q_85/f7a3b9_1f9d7540176a4c83a62736921faeaf39~mv2.jpg" />
-                    </figure>
-                    <section>
-                        <span class="preco">R$ 1000,00</span>
-                        <span class="parcelamento">ou em <em>10x R$100,00 sem juros</em></span>
-
-                        <span class="descricao">Produto xyz cor preta novo perfeito estado 100%</span>
-                        <span class="categoria">
-                            <em>Calçados</em> <em>Vestuário</em><em>Calçados</em>
-                        </span>
-                    </section>
-                    <footer>
-
-                    </footer>
-                </article>
-                <article class="card-produto">
-                    <figure>
-                        <img src="https://cdn.awsli.com.br/800x800/257/257889/produto/83117245/d4177f9b94.jpg" />
-                    </figure>
-                    <section>
-                        <span class="preco">R$ 1000,00</span>
-                        <span class="parcelamento">ou em <em>10x R$100,00 sem juros</em></span>
-
-                        <span class="descricao">Produto xyz cor preta novo perfeito estado 100%</span>
-                        <span class="categoria">
-                            <em>Calçados</em> <em>Vestuário</em><em>Calçados</em>
-                        </span>
-                    </section>
-                    <footer>
-
-                    </footer>
-                </article>
-                <article class="card-produto">
-                    <figure>
-                        <img src="https://images.tcdn.com.br/img/img_prod/680475/tenis_nike_air_jordan_retro_4_black_cat_845_1_20200304235222.jpg" />
-                    </figure>
-                    <section>
-                        <span class="preco">R$ 1000,00</span>
-                        <span class="parcelamento">ou em <em>10x R$100,00 sem juros</em></span>
-
-                        <span class="descricao">Produto xyz cor preta novo perfeito estado 100%</span>
-                        <span class="categoria">
-                            <em>Calçados</em> <em>Vestuário</em><em>Calçados</em>
-                        </span>
-                    </section>
-                    <footer>
-
-                    </footer>
-                </article>
-
-
+                  <?php } ?>
+                
             </main>
         </section>
     </div>

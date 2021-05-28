@@ -106,8 +106,8 @@
             <input type="file"  id="foto" name="foto">
           </div>
           <input type="hidden" name="acao" value="inserir" accept="image/*"/>
-          <button onclick="javascript:window.location.href = '../'">Cancelar</button>
-          <button>Salvar</button>
+          <button type="button"  onclick="javascript: window.location.href = '../novo'">Cancelar</button>
+          <button>Nova Categoria </button>
         </form>
       </main>
     </section>

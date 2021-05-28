@@ -20,12 +20,17 @@
         
         
     <header class="header">
-
         <figure>
-            <img src="../imgs/travis.png" />
+            <a href="../../icatalogo_parte_2/produtos/index.php">
+            <img  src="../imgs/travis.png" />
+            </a>
         </figure>
-
-        <input type="search" placeholder="Pesquisar" />
+        <form method="GET" action="../../icatalogo_parte_2/produtos/index.php" >
+            <input  type="search" placeholder="Pesquisar"  name="pesquisa" id="pesquisa"/>
+            <button>
+                <img src="../imgs/lupa-de-pesquisa.svg">
+            </button>
+        </form>
         <?php if (!isset($_SESSION["usuarioId"])) { ?>
             <nav>
                 <ul>

@@ -38,6 +38,31 @@ function validacaoCampos (){
             $erros[] = "O campo desconto deve ser um número";
         }
     }
+    if($_FILES["foto"]["error"] == UPLOAD_ERR_NO_FILE){
+        $erros[] = "o campo foto ie obrigatorio";
+    }elseif($_FILES["foto"]["error"] != UPLOAD_ERR_OK){
+        $erros[] = "ops, houve um erro com o upload";
+    }else{
+        //pega as informacoes da imagem
+        $imagemInfo = getimagesize($_FILES["foto"]["tmp_name"]);
+
+        if(!$imagemInfo){
+            $erros[] = " O aruivo deve ser uma imagem";
+        }elseif($_FILES["foto"]["size"] > 1024 * 1024 *2){
+            $erros[] = "A foto nao pode ser maior que 2MB";
+        }
+
+        // verifica se a imagem é quadrada
+        $width = $imagemInfo[0];
+        $heigth = $imagemInfo[1];
+
+        if($width != $heigth){
+            $erros[] = "A imagem tem q ser quadrada";
+        }
+    }
+    if(!isset($_POST["categoria"]) && $_POST["categoria"]==""){
+        $erros[] = "O campo categoria é obrigatorio";
+    }
     return $erros;
 }
 
@@ -48,16 +73,24 @@ switch ($_POST["acao"]) {
 
         $erros = validacaoCampos();
 
-        var_dump($_FILES["foto"]);
-
-        exit();
 
         if(count($erros) > 0){
             $_SESSION["erros"] = $erros;
 
-            header("location: index.php?erro=houveErro");
-        }else{
-        
+            header("location: index.php ");
+            exit();
+        }
+           
+            $novoArquivo = $_FILES["foto"]["name"];
+
+            $extensao  = pathinfo($novoArquivo, PATHINFO_EXTENSION);
+
+            $novoNomeArquivo = md5(microtime()).".$extensao";
+
+            move_uploaded_file($_FILES["foto"]["tmp_name"], "../fotos/$novoNomeArquivo");
+
+            $categoria = $_POST["categoria"];
+
             $descricao = $_POST["descricao"];
             // Trocando a virgula por ponto
             $peso = str_replace(",", ".", $_POST["peso"]);
@@ -68,13 +101,23 @@ switch ($_POST["acao"]) {
             $tamanho = $_POST["tamanho"];
             $desconto = $_POST["desconto"] != "" ? $_POST["desconto"] : 0;
         
-            $sqlinsert= "INSERT INTO tbl_produto (descricao, peso, quantidade, cor, tamanho, valor, desconto)
-                            VALUES ('$descricao', $peso, $quantidade, '$cor', '$tamanho', $valor, $desconto)";
+            $sqlinsert= "INSERT INTO tbl_produto (descricao, peso, quantidade, cor, tamanho, valor, desconto, imagem, categoria_id)
+                            VALUES ('$descricao', $peso, $quantidade, '$cor', '$tamanho', $valor, $desconto, '$novoNomeArquivo', '$categoria')";
             
-            $resultado = mysqli_query($conexao, $sqlinsert) or die(mysqli_error($conexao));   
+            $resultado = mysqli_query($conexao, $sqlinsert) or die(mysqli_error($conexao)); 
             
-            header("location: index.php?mensagem=padrão");
-        }
-        $_SESSION["location: index.php"];
+           
+          
+            
+           header("location: ../index.php");
+        
+        // $_SESSION["location: index.php"];
+        break;
+    
+        case "pesquisar":
+
+            $pesquisaDoCliente= $_POST["pesquisa"];
+            echo $pesquisaDoCliente;
+        
         break;
 }
