@@ -113,11 +113,17 @@ switch ($_POST["acao"]) {
         
         // $_SESSION["location: index.php"];
         break;
-    
-        case "pesquisar":
+        case "deletar":
 
-            $pesquisaDoCliente= $_POST["pesquisa"];
-            echo $pesquisaDoCliente;
-        
-        break;
+            $categoriaId = $_POST["categoriaId"];
+          
+          
+            $sql = "DELETE FROM tbl_produto WHERE  id = '$categoriaId'";
+  
+            $resultado = mysqli_query($conexao, $sql);
+  
+            header("location: ../index.php");
+  
+          break;
+       
 }

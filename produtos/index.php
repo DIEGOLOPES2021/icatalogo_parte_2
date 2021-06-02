@@ -3,12 +3,14 @@
 
 require("../database/conexaoBD.php");
 
+
 if(isset($_GET["pesquisa"])&&$_GET["pesquisa"] != ""){
+    $pesquisaDoUsuario = $_GET["pesquisa"]? $_GET["pesquisa"]:"" ;
 
     $sql ="SELECT p.*, c.descricao as categoria FROM tbl_produto p
     INNER JOIN tbl_categoria c ON p.categoria_id = c.id
-    WHERE p.descricao LIKE '%?%'
-    OR c.descricao LIKE '%?%'
+    WHERE p.descricao LIKE '$pesquisaDoUsuario'
+    OR c.descricao LIKE '$pesquisaDoUsuario'
     ORDER BY p.id DESC";
 ?>
             
@@ -94,12 +96,26 @@ $resultado = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
 
                         <span class="descricao"><?= $listaDacategoria["descricao"] ?></span>
                         <span class="categoria">
+
                             <em><?= $listaDacategoria["descricao"] ?></em> 
+                            <?php 
+                                if(isset($_SESSION["usuarioId"])   ){
+                            ?>
+                            <img class="imagem-produto" onclick="deletar(<?= $listaDacategoria['id'] ?>)" src="https://icons.veryicon.com/png/o/construction-tools/coca-design/delete-189.png" />
+                            <?php 
+                                }
+                            ?>
                         </span>
                     </section>
                     <footer>
 
                     </footer>
+
+                    <form id="form-deletar" method="POST" action="./novo/acoes.php">
+                        <input type="hidden" name="acao" value="deletar"/>
+                        <input id="categoria-id" type="hidden" name="categoriaId" value=""/>
+                    </form>
+
                 </article>  
 
                   <?php } ?>
@@ -110,6 +126,14 @@ $resultado = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
     <footer>
         SENAI 2021 - Todos os direitos reservados
     </footer>
+    <script lang="javascript"> 
+    
+    function deletar(categoriaId){
+        document.querySelector("#categoria-id").value = categoriaId;
+
+        document.querySelector("#form-deletar").submit();
+                                }
+    </script>
 </body>
 
 </html>
